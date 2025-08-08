@@ -1298,6 +1298,21 @@ class RT21Radio(chirp_common.CloneModeRadio):
         basic = RadioSettingGroup("basic", "Basic Settings")
         top = RadioSettings(basic)
 
+        if self.MODEL == "RB626":
+            rs = RadioSetting("squelch", "Squelch Level",
+                            RadioSettingValueInteger(0, 9, _settings.squelch))
+            basic.append(rs)
+
+            rs = RadioSetting("tot", "Time-out timer", 
+                            RadioSettingValueList(TIMEOUTTIMER_LIST, current_index=_settings.tot))
+            basic.append(rs)
+
+            rs = RadioSetting("voice", "Voice Prompts",
+                            RadioSettingValueList(
+                                VOICE_LIST2, current_index=_settings.voice))
+            basic.append(rs)
+
+
         if self.MODEL == "RT21" or self.MODEL == "RB17A" or \
                 self.MODEL == "RT29_UHF" or self.MODEL == "RT29_VHF" or \
                 self.MODEL == "RT21V":
