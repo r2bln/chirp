@@ -1297,22 +1297,7 @@ class RT21Radio(chirp_common.CloneModeRadio):
         _settings = self._memobj.settings
         basic = RadioSettingGroup("basic", "Basic Settings")
         top = RadioSettings(basic)
-
-        if self.MODEL == "RB626":
-            rs = RadioSetting("squelch", "Squelch Level",
-                            RadioSettingValueInteger(0, 9, _settings.squelch))
-            basic.append(rs)
-
-            rs = RadioSetting("tot", "Time-out timer", 
-                            RadioSettingValueList(TIMEOUTTIMER_LIST, current_index=_settings.tot))
-            basic.append(rs)
-
-            rs = RadioSetting("voice", "Voice Prompts",
-                            RadioSettingValueList(
-                                VOICE_LIST2, current_index=_settings.voice))
-            basic.append(rs)
-
-
+            
         if self.MODEL == "RT21" or self.MODEL == "RB17A" or \
                 self.MODEL == "RT29_UHF" or self.MODEL == "RT29_VHF" or \
                 self.MODEL == "RT21V":
@@ -1456,6 +1441,7 @@ class RT21Radio(chirp_common.CloneModeRadio):
                           "RT86",
                           "RT619",
                           "RB89",
+                          "RB626",
                           ]:
             if self.MODEL == "RB26" or self.MODEL == "RB23" \
                     or self.MODEL == "RB89":
@@ -1515,7 +1501,7 @@ class RT21Radio(chirp_common.CloneModeRadio):
                 basic.append(rset)
 
             if self.MODEL == "RB26" or self.MODEL == "RB23" \
-                    or self.MODEL == "RB89":
+                    or self.MODEL == "RB89" or self.MODEL == "RB626":
                 rs = RadioSettingValueList(VOICE_LIST2,
                                            current_index=_settings.voice)
                 rset = RadioSetting("voice", "Voice Annumciation", rs)
@@ -1526,7 +1512,7 @@ class RT21Radio(chirp_common.CloneModeRadio):
                 rset = RadioSetting("chnumberd", "Channel Number Enable", rs)
                 basic.append(rset)
 
-            if self.MODEL == "RT86" or self.MODEL == "RB89":
+            if self.MODEL == "RT86" or self.MODEL == "RB89" or self.MODEL == "RB626":
                 rs = RadioSettingValueList(SPECIAL_LIST,
                                            current_index=_settings.tailmode)
                 rset = RadioSetting("tailmode", "QT/DQT Tail Mode", rs)
@@ -1544,6 +1530,7 @@ class RT21Radio(chirp_common.CloneModeRadio):
                               "RB26",
                               "RT86",
                               "RB89",
+                              "RB626",
                               ]:
                 rs = RadioSettingValueBoolean(not _settings.tail)
                 rset = RadioSetting("tail", "QT/DQT Tail", rs)
