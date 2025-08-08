@@ -187,7 +187,7 @@ struct {
   u8 chnumber;         // Channel Number         029F
 } settings2;
 
-#seekto 0x031D;
+#seekto %(vox_offset)s;
 struct {
   u8 unused:7,         //                        031D
      vox:1;            // Vox
@@ -1952,7 +1952,7 @@ class RB26Radio(RT21Radio):
     _memsize = 0x0320
 
     def process_mmap(self):
-        mem_params = {'memcnt': self._upper, 'settings_offset': '0x01F0'}
+        mem_params = {'memcnt': self._upper, 'settings_offset': '0x01F0', 'vox_offset': '0x031D'}
         self._memobj = bitwise.parse(MEM_FORMAT_RB26 % mem_params, self._mmap)
 
 
@@ -1980,10 +1980,10 @@ class RB626(RT21Radio):
     _ranges = [
                (0x0000, 0x0320),
               ]
-    _memsize = 0x0320
+    _memsize = 0x0320 + 0x000f
 
     def process_mmap(self):
-        mem_params = {'memcnt': self._upper, 'settings_offset': '0x0200'}
+        mem_params = {'memcnt': self._upper, 'settings_offset': '0x0200', 'vox_offset': '0x033D'}
         self._memobj = bitwise.parse(MEM_FORMAT_RB26 % mem_params, self._mmap)
 
 
