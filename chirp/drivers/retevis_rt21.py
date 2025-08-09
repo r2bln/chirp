@@ -187,6 +187,9 @@ struct {
   u8 chnumber;         // Channel Number         029F
 } settings2;
 
+#seekto 0x033C;
+u8 memory_bank;         // 0 - top 16 channels, 1 - bottom
+
 #seekto %(vox_offset)s;
 struct {
   u8 unused:7,         //                        031D
@@ -1297,7 +1300,15 @@ class RT21Radio(chirp_common.CloneModeRadio):
         _settings = self._memobj.settings
         basic = RadioSettingGroup("basic", "Basic Settings")
         top = RadioSettings(basic)
-            
+        
+        """
+        if self.MODEL == "RB626":
+            memory_bank = 1
+            rs = RadioSettingValueInteger(0, 1, memory_bank)
+            rset = RadioSetting("memory_bank", "Active memory bank", rs)
+            basic.append(rset)
+        """
+
         if self.MODEL == "RT21" or self.MODEL == "RB17A" or \
                 self.MODEL == "RT29_UHF" or self.MODEL == "RT29_VHF" or \
                 self.MODEL == "RT21V":
@@ -1444,7 +1455,8 @@ class RT21Radio(chirp_common.CloneModeRadio):
                           "RB626",
                           ]:
             if self.MODEL == "RB26" or self.MODEL == "RB23" \
-                    or self.MODEL == "RB89":
+                    or self.MODEL == "RB89" \
+                    or self.MODEL == "RB626":
                 _settings2 = self._memobj.settings2
                 _settings3 = self._memobj.settings3
 
@@ -1575,7 +1587,8 @@ class RT21Radio(chirp_common.CloneModeRadio):
                 basic.append(rset)
 
             if self.MODEL == "RB26" or self.MODEL == "RB23" \
-                    or self.MODEL == "RB89":
+                    or self.MODEL == "RB89"\
+                    or self.MODEL == "RB626":
                 rs = RadioSettingValueBoolean(_settings3.vox)
                 rset = RadioSetting("settings3.vox", "Vox Function", rs)
                 basic.append(rset)
@@ -1590,7 +1603,7 @@ class RT21Radio(chirp_common.CloneModeRadio):
                 rset = RadioSetting("settings3.voxd", "Vox Delay", rs)
                 basic.append(rset)
 
-                if self.MODEL == "RB26":
+                if self.MODEL == "RB26" or self.MODEL == "RB626":
                     rs = RadioSettingValueList(PFKEY_LIST,
                                                current_index=_settings.pf1)
                     rset = RadioSetting("pf1", "PF1 Key Set", rs)
@@ -1631,9 +1644,10 @@ class RT21Radio(chirp_common.CloneModeRadio):
                                             _settings.pf2)
                     basic.append(rset)
 
-                rs = RadioSettingValueInteger(1, 30, _settings2.chnumber + 1)
-                rset = RadioSetting("settings2.chnumber", "Channel Number", rs)
-                basic.append(rset)
+                if self.MODEL != "RB626":
+                    rs = RadioSettingValueInteger(1, 30, _settings2.chnumber + 1)
+                    rset = RadioSetting("settings2.chnumber", "Channel Number", rs)
+                    basic.append(rset)
 
             if self.MODEL == "RT76":
                 rs = RadioSettingValueBoolean(_settings.vox)
